@@ -12,6 +12,7 @@ const gridElement = document.querySelector('.grid');
 const scoreElement = document.querySelector('.score');
 const highScoreElement = document.querySelector('.high-score')
 const timerElement = document.querySelector('.timer');
+const playGameButtonElement = document.querySelector('.playGameButton')
 
 function randomPos() {
   let x = Math.ceil(Math.random() * size);
@@ -52,19 +53,21 @@ function setValues() {
 
 function plateCreator(colour, x, y) {
   // return `<div class="plate ${colour}">${x}:${y}</div>`
-  if (colour === 'green') {
-    if (score >= 5 && score < 10) {
-      return `<div class="plate medium"></div>`
-    } else if (score >= 10 && score < 15) {
-      return `<div class="plate hard"></div>`
-    } else if (score >= 15) {
-      return `<div class="plate extreme"></div>`
-    } else {
-      return `<div class="plate ${colour}"></div>`
+
+  if (colour === 'green' || colour === 'grey') {
+    if (score < 1) {
+      return `<div class="plate ${colour}-one"></div>`
+    } else if (score >= 1 && score < 2) {
+      return `<div class="plate ${colour}-two"></div>`
+    } else if (score >= 2 && score < 3) {
+      return `<div class="plate ${colour}-three"></div>`
+    } else if (score >= 3) {
+      return `<div class="plate ${colour}-four"></div>`
     }
   } else {
     return `<div class="plate ${colour}"></div>`
   }
+  
 }
 
 function loadPage() {
@@ -104,6 +107,7 @@ setValues();
 loadPage();
 
 function playGame() {
+  playGameButtonElement.disabled = true;
   setValues();
   loadPage();
   gameActive = true
@@ -113,6 +117,7 @@ function playGame() {
       timer--;
       timerElement.innerHTML = `${(timer / 10).toFixed(1)}`
     } else {
+      playGameButtonElement.disabled = false;
       let endMessage = '';
       if (score === highScore) {
         endMessage = 'That\'s a new highscore!'

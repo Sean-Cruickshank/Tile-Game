@@ -1,7 +1,10 @@
 body {
   display: grid;
   justify-content: center;
-  background-color: rgb(30, 30, 30)
+  background-color: rgb(30, 30, 30);
+  font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+  font-size: 1rem;
+  color: white;
 }
 
 .grid {
@@ -21,29 +24,42 @@ body {
   background-color: blue;
 }
 
-.grey {
-  background-color: gray;
-}
-
 .gold {
   background-color: gold;
 }
 
-.easy {
+.green-one {
   background-color: greenyellow;
 }
 
-.medium {
+.grey-one {
+  background-color: green;
+}
+
+.green-two {
   background-color: tan;
 }
 
-.hard {
+.grey-two {
+  background-color: rgb(90, 90, 120);
+}
+
+.green-three {
   background-color: lightblue;
 }
 
-.extreme {
-  background-color: red;
+.grey-three {
+  background-color: rgb(100, 100, 180);
 }
+
+.green-four {
+  background-color: rgb(200, 60, 60);
+}
+
+.grey-four {
+  background-color: rgb(90, 15, 15);
+}
+
 
 .control-panel {
   display: grid;
