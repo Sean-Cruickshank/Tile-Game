@@ -1,0 +1,52 @@
+body {
+  display: grid;
+  justify-content: center;
+  background-color: rgb(30, 30, 30)
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, 50px);
+  gap: 5px;
+}
+
+.plate {
+  background-color: greenyellow;
+  height: 50px;
+  padding: 0;
+  margin: 0;
+}
+
+.blue {
+  background-color: blue;
+}
+
+.grey {
+  background-color: gray;
+}
+
+.gold {
+  background-color: gold;
+}
+
+.easy {
+  background-color: greenyellow;
+}
+
+.medium {
+  background-color: tan;
+}
+
+.hard {
+  background-color: lightblue;
+}
+
+.extreme {
+  background-color: red;
+}
+
+.control-panel {
+  display: grid;
+  grid-template-columns: repeat(5, 100px);
+  gap: 40px;
+}
