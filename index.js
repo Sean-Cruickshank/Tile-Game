@@ -52,8 +52,6 @@ function setValues() {
 }
 
 function plateCreator(colour, x, y) {
-  // return `<div class="plate ${colour}">${x}:${y}</div>`
-
   if (colour === 'green' || colour === 'grey') {
     if (score < 1) {
       return `<div class="plate ${colour}-one"></div>`
@@ -70,7 +68,7 @@ function plateCreator(colour, x, y) {
   
 }
 
-function loadPage() {
+function renderGrid() {
   let gridElementHTML = '';
   plateArray.forEach((plate) => {
     if (plate.grey) {
@@ -94,7 +92,7 @@ function loadPage() {
       localStorage.setItem('highscore', highScore)
     }
     setValues()
-    loadPage()
+    renderGrid()
   }
 }
 
@@ -104,12 +102,12 @@ function renderScores() {
 }
 
 setValues();
-loadPage();
+renderGrid();
 
 function playGame() {
   playGameButtonElement.disabled = true;
   setValues();
-  loadPage();
+  renderGrid();
   gameActive = true
   let timer = 300
   const clock = setInterval(() => {
@@ -142,110 +140,53 @@ function resetHighScore() {
   renderScores()
 }
 
-
-function moveLeft() {
-  if (playerPos.x > 1) {
-    if (checkPos('left')) {
-      playerPos.x --
-      loadPage()
+function movePos(direction) {
+  if (playerPos.x > 1 && direction === 'ArrowLeft') {
+    if (checkPos(direction)) {
+      playerPos.x --;
+      renderGrid()
     }
-    
-  }
-}
-
-function moveRight() {
-  if (playerPos.x < size) {
-    if (checkPos('right')) {
-      playerPos.x++
-      loadPage()
+  } else if (playerPos.x < size && direction === 'ArrowRight') {
+    if (checkPos(direction)) {
+      playerPos.x ++;
+      renderGrid()
     }
-    
-  }
-}
-
-function moveUp() {
-  if (playerPos.y > 1) {
-    if (checkPos('up')) {
+  } else if (playerPos.y > 1 && direction === 'ArrowUp') {
+    if (checkPos('ArrowUp')) {
       playerPos.y--
-      loadPage()
+      renderGrid()
     }
-    
-  }
-}
-
-function moveDown() {
-  if (playerPos.y < size) {
-    if (checkPos('down')) {
+  } else if (playerPos.y < size && direction === 'ArrowDown') {
+    if (checkPos('ArrowDown')) {
       playerPos.y++
-      loadPage()
+      renderGrid()
     }
-
   }
 }
 
 addEventListener('keydown', (input) => {
   if (gameActive) {
-    if (input.key === 'ArrowLeft') {
-      moveLeft();
-    }
-    if (input.key === 'ArrowRight') {
-      moveRight();
-    }
-    if (input.key === 'ArrowUp') {
-      moveUp();
-    }
-    if (input.key === 'ArrowDown') {
-      moveDown();
-    }
+    movePos(input.key);
     if (input.key === 'Enter') {
       setValues();
-      loadPage();
+      renderGrid();
     }
   }
 })
 
 function checkPos(move) {
-  let result;
-  if (move === 'left') {
-    plateArray.forEach((plate) => {
-      if (plate.x === playerPos.x - 1 && plate.y === playerPos.y) {
-        if (plate.grey) {
-          result = false
-        } else {
-          result = true
-        }
-      }
-    })
-  } else if (move === 'right') {
-    plateArray.forEach((plate) => {
-      if (plate.x === playerPos.x + 1 && plate.y === playerPos.y) {
-        if (plate.grey) {
-          result = false
-        } else {
-          result = true
-        }
-      }
-    })
-  } else if (move === 'up') {
-    plateArray.forEach((plate) => {
-      if (plate.x === playerPos.x && plate.y === playerPos.y - 1) {
-        if (plate.grey) {
-          result = false
-        } else {
-          result = true
-        }
-      }
-    })
-  } else if (move === 'down') {
-    plateArray.forEach((plate) => {
-      if (plate.x === playerPos.x && plate.y === playerPos.y + 1) {
-        if (plate.grey) {
-          result = false
-        } else {
-          result = true
-        }
-      }
-    })
-  }
+  let result = true;
+
+  plateArray.forEach((plate) => {
+    if (move === 'ArrowLeft' && plate.x === playerPos.x - 1 && plate.y === playerPos.y) {
+      if (plate.grey) {result = false}
+    } else if (move === 'ArrowRight' && plate.x === playerPos.x + 1 && plate.y === playerPos.y) {
+      if (plate.grey) {result = false}
+    } else if (move === 'ArrowUp' && plate.x === playerPos.x && plate.y === playerPos.y - 1) {
+      if (plate.grey) {result = false}
+    } else if (move === 'ArrowDown' && plate.x === playerPos.x && plate.y === playerPos.y + 1) {
+      if (plate.grey) {result = false}
+    }
+  })
   return result
 }
