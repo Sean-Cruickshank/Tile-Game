@@ -1,92 +1,83 @@
 let plateArray = [];
-let size = 12;
-let grid = size*size
-let gridX = 1;
-let gridY = 1;
+let grid = {x: 1, y: 1}
 let playerPos = randomPos();
 let goalPos = randomPos();
 let score = 0
 let highScore = localStorage.getItem('highscore') | 0;
-let gameActive = false
-const gridElement = document.querySelector('.grid');
-const scoreElement = document.querySelector('.score');
-const highScoreElement = document.querySelector('.high-score')
-const timerElement = document.querySelector('.timer');
-const playGameButtonElement = document.querySelector('.playGameButton')
 
 function randomPos() {
-  let x = Math.ceil(Math.random() * size);
-  let y = Math.ceil(Math.random() * size);
+  let x = Math.ceil(Math.random() * 12);
+  let y = Math.ceil(Math.random() * 12);
   return {x, y}
 }
 
 function setValues() {
-  gridX = 1;
-  gridY = 1;
+  grid.x = 1;
+  grid.y = 1;
   playerPos = randomPos();
   goalPos = randomPos();
   plateArray = [];
 
-  for (let i = 0; i < grid; i++) {
+  for (let i = 0; i < 144; i++) {
     const ranNum = (Math.random().toFixed(2)) * 100;
     let isGrey = false;
     if (ranNum <= 20) {
-      if (gridX === playerPos.x && gridY === playerPos.y) {
+      if (grid.x === playerPos.x && grid.y === playerPos.y) {
         isGrey = false;
-      } else if (gridX === goalPos.x && gridY === goalPos.y) {
+      } else if (grid.x === goalPos.x && grid.y === goalPos.y) {
         isGrey = false;
       } else {
         isGrey = true;
       }
       
     }
-    if (gridX < size) {
-      plateArray.push({active: false, grey: isGrey, x: gridX, y: gridY})
-      gridX++;
-    } else if (gridX === size) {
-      plateArray.push({active: false, grey: isGrey, x: gridX, y: gridY})
-      gridX = 1;
-      gridY++;
+    if (grid.x < 12) {
+      plateArray.push({active: false, grey: isGrey, x: grid.x, y: grid.y})
+      grid.x++;
+    } else if (grid.x === 12) {
+      plateArray.push({active: false, grey: isGrey, x: grid.x, y: grid.y})
+      grid.x = 1;
+      grid.y++;
     }
   }
 }
 
-function plateCreator(colour, x, y) {
-  if (colour === 'green' || colour === 'grey') {
+function plateCreator(icon, x, y) {
+  if (icon === 'floor' || icon === 'wall') {
     if (score < 1) {
-      return `<div class="plate ${colour}-one"></div>`
+      return `<div class="plate ${icon}-one"></div>`
     } else if (score >= 1 && score < 2) {
-      return `<div class="plate ${colour}-two"></div>`
+      return `<div class="plate ${icon}-two"></div>`
     } else if (score >= 2 && score < 3) {
-      return `<div class="plate ${colour}-three"></div>`
+      return `<div class="plate ${icon}-three"></div>`
     } else if (score >= 3) {
-      return `<div class="plate ${colour}-four"></div>`
+      return `<div class="plate ${icon}-four"></div>`
     }
   } else {
-    return `<div class="plate ${colour}"></div>`
+    return `<div class="plate ${icon}"></div>`
   }
   
 }
 
+const gameElement = document.querySelector('.js-game');
+
 function renderGrid() {
-  let gridElementHTML = '';
+  let gameElementHTML = '';
   plateArray.forEach((plate) => {
     if (plate.grey) {
-      gridElementHTML += plateCreator('grey', plate.x, plate.y)
+      gameElementHTML += plateCreator('wall', plate.x, plate.y)
     } else if (plate.x === playerPos.x && plate.y === playerPos.y) {
-      gridElementHTML += plateCreator('blue', plate.x, plate.y)
+      gameElementHTML += plateCreator('player-icon', plate.x, plate.y)
     } else if (plate.x === goalPos.x && plate.y === goalPos.y) {
-      gridElementHTML += plateCreator('gold', plate.x, plate.y)
+      gameElementHTML += plateCreator('key', plate.x, plate.y)
     } else {
-      gridElementHTML += plateCreator('green', plate.x, plate.y)
+      gameElementHTML += plateCreator('floor', plate.x, plate.y)
     }
   })
-  gridElement.innerHTML = gridElementHTML;
+  gameElement.innerHTML = gameElementHTML;
   renderScores()
   if (playerPos.x === goalPos.x && playerPos.y === goalPos.y) {
-    if (gameActive) {
-      score++;
-    }
+    score++;
     if (score > highScore) {
       highScore = score;
       localStorage.setItem('highscore', highScore)
@@ -97,6 +88,8 @@ function renderGrid() {
 }
 
 function renderScores() {
+  const scoreElement = document.querySelector('.js-score');
+  const highScoreElement = document.querySelector('.js-high-score');
   scoreElement.innerHTML = `Score: ${score}`;
   highScoreElement.innerHTML = `High Score: ${highScore}`
 }
@@ -104,34 +97,53 @@ function renderScores() {
 setValues();
 renderGrid();
 
+let gameActive = false;
+let timer = 300
+
 function playGame() {
-  playGameButtonElement.disabled = true;
+  const startGameButtonElement = document.querySelector('.js-start-game-button');
+  const stopGameButtonElement = document.querySelector('.js-stop-game-button');
+  const tipElement = document.querySelector('.js-tip');
+  tipElement.classList.remove('hidden');
+  startGameButtonElement.classList.add('hidden');
+  stopGameButtonElement.classList.remove('hidden');
   setValues();
   renderGrid();
   gameActive = true
-  let timer = 300
   const clock = setInterval(() => {
     if (timer > 0) {
       timer--;
+      const timerElement = document.querySelector('.js-timer');
       timerElement.innerHTML = `${(timer / 10).toFixed(1)}`
     } else {
-      playGameButtonElement.disabled = false;
-      let endMessage = '';
-      if (score === highScore) {
-        endMessage = 'That\'s a new highscore!'
-      } else if (highScore - score < 3) {
-        endMessage = 'So close! You almost made it to your highscore!'
-      } else if (highScore - score >= 3) {
-        endMessage = 'Better luck next time!'
-      }
-      alert(`Game over! ${endMessage}
-Your score: ${score}
-High score: ${highScore}`)
+      startGameButtonElement.classList.remove('hidden');
+      stopGameButtonElement.classList.add('hidden');
+      tipElement.classList.add('hidden');
+      alert(generateEndMessage())
       score = 0
       gameActive = false
       clearInterval(clock)
+      timer = 300;
     }
   }, 100)
+}
+
+function killTimer() {
+  timer = 1;
+}
+
+function generateEndMessage() {
+  let endMessage = '';
+  if (score === highScore) {
+    endMessage = 'That\'s a new highscore!'
+  } else if (highScore - score < 3) {
+    endMessage = 'So close! You almost made it to your highscore!'
+  } else if (highScore - score >= 3) {
+    endMessage = 'Better luck next time!'
+  }
+  return `Game over! ${endMessage}
+Your score: ${score}
+High score: ${highScore}`
 }
 
 function resetHighScore() {
@@ -146,7 +158,7 @@ function movePos(direction) {
       playerPos.x --;
       renderGrid()
     }
-  } else if (playerPos.x < size && direction === 'ArrowRight') {
+  } else if (playerPos.x < 12 && direction === 'ArrowRight') {
     if (checkPos(direction)) {
       playerPos.x ++;
       renderGrid()
@@ -156,7 +168,7 @@ function movePos(direction) {
       playerPos.y--
       renderGrid()
     }
-  } else if (playerPos.y < size && direction === 'ArrowDown') {
+  } else if (playerPos.y < 12 && direction === 'ArrowDown') {
     if (checkPos('ArrowDown')) {
       playerPos.y++
       renderGrid()
@@ -176,16 +188,15 @@ addEventListener('keydown', (input) => {
 
 function checkPos(move) {
   let result = true;
-
   plateArray.forEach((plate) => {
     if (move === 'ArrowLeft' && plate.x === playerPos.x - 1 && plate.y === playerPos.y) {
-      if (plate.grey) {result = false}
+      if (plate.grey) result = false
     } else if (move === 'ArrowRight' && plate.x === playerPos.x + 1 && plate.y === playerPos.y) {
-      if (plate.grey) {result = false}
+      if (plate.grey) result = false
     } else if (move === 'ArrowUp' && plate.x === playerPos.x && plate.y === playerPos.y - 1) {
-      if (plate.grey) {result = false}
+      if (plate.grey) result = false
     } else if (move === 'ArrowDown' && plate.x === playerPos.x && plate.y === playerPos.y + 1) {
-      if (plate.grey) {result = false}
+      if (plate.grey) result = false
     }
   })
   return result
