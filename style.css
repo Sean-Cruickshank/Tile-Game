@@ -3,6 +3,7 @@ body {
   background-color: rgb(30, 30, 30);
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
   font-size: 1rem;
+  line-height: 1.1;
   color: white;
 }
 
@@ -22,9 +23,19 @@ button:hover {
   background-color: rgb(120, 120, 120);
 }
 
+.main {
+  background-color: red;
+}
+
 .grid {
   display: flex;
+  gap: 10px;
   justify-content: center;
+}
+
+.title {
+  background-color: black;
+  margin-inline: auto;
 }
 
 .game {
@@ -45,6 +56,34 @@ button:hover {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center center;
+}
+
+.player-icon-blue {
+  background-image: url(./img/player-blue.png);
+}
+
+.player-icon-red {
+  background-image: url(./img/player-red.png);
+}
+
+.player-icon-yellow {
+  background-image: url(./img/player-yellow.png);
+}
+
+.player-icon-green {
+  background-image: url(./img/player-green.png);
+}
+
+.player-icon-teal {
+  background-image: url(./img/player-teal.png);
+}
+
+.player-icon-purple {
+  background-image: url(./img/player-purple.png);
+}
+
+.player-icon-orange {
+  background-image: url(./img/player-orange.png);
 }
 
 .key {
@@ -99,13 +138,10 @@ button:hover {
   font-size: clamp(0.5rem, 0.7rem + 1.5vw, 1.5rem);
 }
 
-.reset-score-button {
-
-}
-
 .start-game-button, .stop-game-button {
   position: absolute;
   bottom: 0;
+  left: 50%;
   transform: translate(-50%, -30%);
   font-size: clamp(0.5rem, 0.5rem + 2vw, 2rem);
 }
@@ -129,4 +165,17 @@ button:hover {
   left: 0;
   transform: translate(0%, -50%);
   font-size: clamp(0.5rem, 0.5rem + 1vw, 1rem);
+}
+
+.colour-select {
+  margin-top: 10px;
+  background-color: rgb(90, 90, 90);
+  border: 2px solid white;
+  border-radius: 5px;
+  box-shadow: 3px 5px 5px rgba(30, 30, 30, 0.5);
+  cursor: pointer;
+  padding: 4px 5px;
+  width: 60%;
+  color: white;
+  text-align: center;
 }

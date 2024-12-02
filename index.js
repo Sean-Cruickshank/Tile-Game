@@ -32,10 +32,10 @@ function setValues() {
       
     }
     if (grid.x < 12) {
-      plateArray.push({active: false, grey: isGrey, x: grid.x, y: grid.y})
+      plateArray.push({grey: isGrey, x: grid.x, y: grid.y})
       grid.x++;
     } else if (grid.x === 12) {
-      plateArray.push({active: false, grey: isGrey, x: grid.x, y: grid.y})
+      plateArray.push({grey: isGrey, x: grid.x, y: grid.y})
       grid.x = 1;
       grid.y++;
     }
@@ -44,13 +44,13 @@ function setValues() {
 
 function plateCreator(icon, x, y) {
   if (icon === 'floor' || icon === 'wall') {
-    if (score < 1) {
+    if (score < 5) {
       return `<div class="plate ${icon}-one"></div>`
-    } else if (score >= 1 && score < 2) {
+    } else if (score >= 5 && score < 10) {
       return `<div class="plate ${icon}-two"></div>`
-    } else if (score >= 2 && score < 3) {
+    } else if (score >= 10 && score < 15) {
       return `<div class="plate ${icon}-three"></div>`
-    } else if (score >= 3) {
+    } else if (score >= 15) {
       return `<div class="plate ${icon}-four"></div>`
     }
   } else {
@@ -61,13 +61,18 @@ function plateCreator(icon, x, y) {
 
 const gameElement = document.querySelector('.js-game');
 
+const selectElement = document.querySelector('.js-colour-select');
+console.log(selectElement.value)
+
+const playerColour = 'orange'
+
 function renderGrid() {
   let gameElementHTML = '';
   plateArray.forEach((plate) => {
     if (plate.grey) {
       gameElementHTML += plateCreator('wall', plate.x, plate.y)
     } else if (plate.x === playerPos.x && plate.y === playerPos.y) {
-      gameElementHTML += plateCreator('player-icon', plate.x, plate.y)
+      gameElementHTML += plateCreator(`player-icon player-icon-${selectElement.value}`, plate.x, plate.y)
     } else if (plate.x === goalPos.x && plate.y === goalPos.y) {
       gameElementHTML += plateCreator('key', plate.x, plate.y)
     } else {
@@ -135,9 +140,9 @@ function killTimer() {
 function generateEndMessage() {
   let endMessage = '';
   if (score === highScore) {
-    endMessage = 'That\'s a new highscore!'
+    endMessage = 'Well done, that\'s an impressive score!'
   } else if (highScore - score < 3) {
-    endMessage = 'So close! You almost made it to your highscore!'
+    endMessage = 'So close! You almost made it!'
   } else if (highScore - score >= 3) {
     endMessage = 'Better luck next time!'
   }
